@@ -13,35 +13,25 @@ class ImageLabelingCallback:
         if 'skip_' in mode:
             self.ignore_label = mode.split('skip_')[-1]
             print('Skip mode for label', self.ignore_label)
-            self.next_cb = self._skip_matching
-            self.next_cb()
+            self._remove_matching(self.label_dict, self.image_callback.files)
         elif 'skip' in mode:
             print('Skipping all seen images')
-            self.next_cb = self._skip_seen
-            self.next_cb()
+            self._remove_seen(self.label_dict, self.image_callback.files)
         else:
             print('Starting from clean slate')
-            self.next_cb = self._noskip
+        self.next_cb = self._noskip
 
-    def _skip_seen(self, *args, **kwargs):
-        idx = self.image_callback.idx
-        image_path = self.image_callback.files[idx]
-        while image_path in self.label_dict['image_path']:
-            self.image_callback(*args, **kwargs)
-            if self.image_callback.idx == 0:
-                break
+    def _remove_seen(self, result_dict: dict, filelist: list):
+        for i, path in enumerate(result_dict['image_path']):
+            if path in filelist:
+                filelist.remove(path)
+        return filelist
 
-    def _skip_matching(self, *args, **kwargs):
-        idx = self.image_callback.idx
-        image_path = self.image_callback.files[idx]
-        while (image_path in self.label_dict['image_path']):
-            self.image_callback(*args, **kwargs)
-            idx = self.image_callback.idx
-            if not (self.label_dict['label'][idx] == self.ignore_label):
-                break
-            if self.image_callback.idx == 0:
-                break
-
+    def _remove_matching(self, result_dict: dict, filelist: list):
+        for i, path in enumerate(result_dict['image_path']):
+            if path in filelist and result_dict['label'][i] == self.ignore_label:
+                filelist.remove(path)
+        return filelist
 
     def _noskip(self, *args, **kwargs):
         self.image_callback(*args, **kwargs)
