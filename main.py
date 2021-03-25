@@ -12,7 +12,7 @@ from callbacks.label_callback import ImageLabelingCallback
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--output', default='labeled.csv', dest='output')
-    parser.add_argument('-m', '--mode', default='skip_no_symbol', dest='mode')
+    parser.add_argument('-m', '--mode', default='skip', dest='mode')
     parser.add_argument('-i', '--input', default=join('.', 'imgs'), dest='input')
     args = parser.parse_args()
 
