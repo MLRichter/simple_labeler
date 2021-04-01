@@ -20,7 +20,8 @@ if __name__ == '__main__':
 
     root = tk.Tk()
     path = args.input #join('.', 'imgs', 'test.jpg')
-    img = Image.open(join(path, listdir(path)[-1]))
+    img = Image.open(join(path, listdir(path)[0]))
+    #img = Image.open(join(path, listdir(path)[-1]))
     img.thumbnail(input_resolution, Image.ANTIALIAS)
     img = ImageTk.PhotoImage(img)
 
